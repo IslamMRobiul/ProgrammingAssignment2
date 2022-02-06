@@ -1,35 +1,39 @@
 ## Put comments here that give an overall description of what your
 ## functions do
 
-## Write a short comment describing this function
+## There are two functions makeCacheMatrix, makeCachematrix
+##makeCacheMatrix consists of set, get, setinv, getinv
+##library(MASS) isused to calculate inverse for non squared as well as squares matrices
+library(MASS)
 makeCacheMatrix <- function(x = matrix()) {
-  sd <- NULL     ## Initializing Standard Deviation as NULL
-  set <- function(y)
-    x <<- y
-    sd <<- NULL
-    get <- function() x     #Function to get matrix x
-    setsd <- function(sd) sd <<- StandardDeviation
-    getsd <- function() sd
-    list(
-      set = set,
-      get = get,
-      setsd = setsd,
-      getsd = getsd
-    )
+  inv <- NULL     # Initializing inverse as NULL
+  set <- function(y) {
+          x <<- y
+          inv <<- NULL
+    }
+    get <- function() x     #function to get matrix x
+    setinv <- function(inverse) inv <<- inverse
+    getinv <- function() {
+              inver <- ginv(x)
+              inver%*%x   #function to obtain inverse of the matrix
+      }
+    list(set = set, get = get,
+      setinv = setinv,
+      getinv = getinv)
 
 }
 
 
 ## Write a short comment describing this function
-
-cacheSolve <- function(x, ...) {    ## gets cache data
-  sd <- x$getsd()        
-  if (!is.null(sd)) {      ## Checking whether the Standard Deviation is Null
-    message("getting cached data")
-    return(sd)         ## Returns Standard Deviation Value
+## This is used to get Cache data
+cacheSolve <- function(x, ...) {    # gets cache data
+  inv <- x$getinv()        
+  if (!is.null(inv)) {                      # Checking whether inverse is Null
+                      message("getting cached data!")
+                      return(inv)           # Returns inverse Value
   }      
   data <- x$get()
-  sd <- solve(data, ...)        ## Calculate Standard Deviation value
-  x$setsd(sd)
-  sd            ## Return a matrix that is the Standard Deviation of 'x'
+  inv <- solve(data, ...)        # Calculates inverse value
+  x$setinv(inv)
+  inv           ## Return a matrix that is the inverse of 'x'
 }
